@@ -52,7 +52,7 @@ app.get("/products/:id", async (req, res) => {
   }
 });
 
-app.post("/products", async (req, res) => {
+app.post("/products/add", async (req, res) => {
   try {
     const {
       title,
