@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const Product = require("./models/product"); // Assuming you have a product model defined
 
 const app = express();
@@ -21,6 +22,11 @@ const connectDB = async () => {
   }
 };
 
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Replace with the actual frontend URL
+  })
+);
 app.use(express.json());
 
 // Routes go here
