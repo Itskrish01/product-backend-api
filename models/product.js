@@ -18,10 +18,6 @@ const VariantSchema = new Schema({
 });
 
 const ProductSchema = new Schema({
-  _id: {
-    type: String,
-    required: true,
-  },
   title: {
     type: String,
     required: true,
