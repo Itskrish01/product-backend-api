@@ -38,6 +38,20 @@ app.get("/products", async (req, res) => {
   }
 });
 
+app.get("/products/:id", async (req, res) => {
+  const productId = req.params.id;
+  try {
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    res.status(500).json({ error: "Something went wrong." });
+  }
+});
+
 // Connect to the database before listening
 connectDB().then(() => {
   app.listen(PORT, () => {
