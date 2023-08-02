@@ -1,9 +1,25 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
+
+const VariantSchema = new Schema({
+  variant_name: {
+    type: String,
+    required: true,
+  },
+  variant_color: {
+    type: String,
+    required: true,
+  },
+  variant_images: {
+    type: [String],
+    required: true,
+  },
+});
+
 const ProductSchema = new Schema({
-  id: {
-    type: Number,
+  _id: {
+    type: String,
     required: true,
   },
   title: {
@@ -42,10 +58,7 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
-  images: {
-    type: [String],
-    required: true,
-  },
+  variants: [VariantSchema],
 });
 
 module.exports = mongoose.model("Product", ProductSchema);
