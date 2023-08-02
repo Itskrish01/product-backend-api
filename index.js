@@ -52,6 +52,42 @@ app.get("/products/:id", async (req, res) => {
   }
 });
 
+app.post("/products", async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      price,
+      discountPercentage,
+      rating,
+      stock,
+      brand,
+      category,
+      thumbnail,
+      variants,
+    } = req.body;
+
+    const newProduct = new Product({
+      title,
+      description,
+      price,
+      discountPercentage,
+      rating,
+      stock,
+      brand,
+      category,
+      thumbnail,
+      variants,
+    });
+
+    await newProduct.save();
+    res.status(201).json({ message: "Product added successfully" });
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({ error: "Something went wrong." });
+  }
+});
+
 // Connect to the database before listening
 connectDB().then(() => {
   app.listen(PORT, () => {
