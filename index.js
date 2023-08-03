@@ -24,7 +24,7 @@ const connectDB = async () => {
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // Replace with the actual frontend URL
+    origin: "*", // Replace with the actual frontend URL
   })
 );
 app.use(express.json());
