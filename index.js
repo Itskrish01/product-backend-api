@@ -24,10 +24,7 @@ const connectDB = async () => {
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://nextjs-ecommerce-app-five.vercel.app/",
-    ],
+    origin: "*",
   })
 );
 app.use(express.json());
