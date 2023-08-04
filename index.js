@@ -24,7 +24,10 @@ const connectDB = async () => {
 
 app.use(
   cors({
-    origin: "*", // Replace with the actual frontend URL
+    origin: [
+      "http://localhost:3000",
+      "https://nextjs-ecommerce-app-five.vercel.app/",
+    ],
   })
 );
 app.use(express.json());
@@ -94,7 +97,6 @@ app.post("/products/add", async (req, res) => {
   }
 });
 
-// Connect to the database before listening
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log("Listening for requests");
