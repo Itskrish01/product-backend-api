@@ -99,35 +99,32 @@ app.post("/products/add", async (req, res) => {
 
 // Stripe endpoint to create a Checkout Session
 app.post("/stripe", async (req, res) => {
+  console.log(res.body);
   try {
-    const { _id } = req.body; // Assuming you send the product ID in the request body
-
-    // Fetch the product details from the database
-    const product = await Product.findById(_id);
-    if (!product) {
-      return res.status(404).json({ error: "Product not found." });
-    }
-
-    // Convert the price from USD to INR (using an exchange rate or API)
-    const exchangeRate = 73.5; // Example exchange rate (1 USD to INR)
-    const priceInINR = product.price * exchangeRate;
-
     // Create a Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: [
-        {
+      line_items: JSON.parse(req.body).map((item) => {
+        const img = item.thumbnail;
+        const convertedPrice = item.price * exchangeRate;
+
+        return {
           price_data: {
-            currency: "inr", // Use INR as the currency for Stripe
+            currency: "inr",
             product_data: {
-              name: product.title,
-              images: [product.thumbnail],
+              name: item.title,
+              images: [img],
             },
-            unit_amount: Math.round(priceInINR * 100), // Convert to paisa (smallest currency unit in INR)
+            unit_amount: Math.round(convertedPrice * 100),
           },
-          quantity: 1,
-        },
-      ],
+
+          adjustable_quantity: {
+            enabled: true,
+            minimum: 1,
+          },
+          quantity: item.quantity,
+        };
+      }),
       mode: "payment",
       success_url: `https://nextjs-ecommerce-app-five.vercel.app//success`,
       cancel_url: `https://nextjs-ecommerce-app-five.vercel.app//canceled`,
