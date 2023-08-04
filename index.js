@@ -6,7 +6,7 @@ const cors = require("cors");
 const Product = require("./models/product"); // Assuming you have a product model defined
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 mongoose.set("strictQuery", false);
 const connectDB = async () => {
