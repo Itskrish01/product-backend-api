@@ -4,12 +4,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const Product = require("./models/product"); // Assuming you have a product model defined
-const { default: Stripe } = require("stripe");
 
 const app = express();
-const PORT = process.env.PORT || 8080;
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const PORT = process.env.PORT || 3000;
 
 mongoose.set("strictQuery", false);
 const connectDB = async () => {
@@ -93,46 +90,6 @@ app.post("/products/add", async (req, res) => {
     res.status(201).json({ message: "Product added successfully" });
   } catch (error) {
     console.error("Error adding product:", error);
-    res.status(500).json({ error: "Something went wrong." });
-  }
-});
-
-// Stripe endpoint to create a Checkout Session
-app.post("/stripe", async (req, res) => {
-  console.log(res.body);
-  try {
-    // Create a Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: JSON.parse(req.body).map((item) => {
-        const img = item.thumbnail;
-        const convertedPrice = item.price * exchangeRate;
-
-        return {
-          price_data: {
-            currency: "inr",
-            product_data: {
-              name: item.title,
-              images: [img],
-            },
-            unit_amount: Math.round(convertedPrice * 100),
-          },
-
-          adjustable_quantity: {
-            enabled: true,
-            minimum: 1,
-          },
-          quantity: item.quantity,
-        };
-      }),
-      mode: "payment",
-      success_url: `https://nextjs-ecommerce-app-five.vercel.app//success`,
-      cancel_url: `https://nextjs-ecommerce-app-five.vercel.app//canceled`,
-    });
-
-    res.status(201).json({ sessionId: session.id });
-  } catch (error) {
-    console.error("Error creating Stripe session:", error);
     res.status(500).json({ error: "Something went wrong." });
   }
 });
